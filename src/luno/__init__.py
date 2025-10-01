@@ -1,4 +1,5 @@
 # isort: off
+
 from . import (
     _linox,
     covariances,
@@ -7,7 +8,7 @@ from . import (
     jacobians,
 )
 
-from ._fno_last_layer import FNOGPLastLayer
+from luno._fno_last_layer import FNOGPLastLayer
 
 # isort: on
 
