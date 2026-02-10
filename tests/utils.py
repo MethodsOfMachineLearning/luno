@@ -15,7 +15,27 @@ def assert_samples_marginally_gaussian(
     mean = np.expand_dims(mean, axis=axis)
     std = np.expand_dims(std, axis=axis)
 
-    samples_standardized = (samples - mean) / std
+    samples_broadcast = np.broadcast_to(samples, shape=samples.shape)
+    mean_broadcast = np.broadcast_to(mean, shape=samples.shape)
+    std_broadcast = np.broadcast_to(std, shape=samples.shape)
+
+    nondegenerate = std_broadcast > 0
+
+    # Zero-variance marginals are deterministic and should match the mean.
+    if np.any(~nondegenerate):
+        np.testing.assert_allclose(
+            samples_broadcast[~nondegenerate],
+            mean_broadcast[~nondegenerate],
+            atol=1e-6,
+        )
+
+    if not np.any(nondegenerate):
+        return
+
+    samples_standardized = np.zeros_like(samples_broadcast, dtype=np.float64)
+    samples_standardized[nondegenerate] = (
+        samples_broadcast[nondegenerate] - mean_broadcast[nondegenerate]
+    ) / std_broadcast[nondegenerate]
 
     # Map standardized samples through standard normal cdf and compare to uniform cdf
     samples_norm_cdf = scipy.stats.norm.cdf(samples_standardized)
@@ -32,7 +52,7 @@ def assert_samples_marginally_gaussian(
     )
 
     np.testing.assert_allclose(
-        samples_norm_cdf,
-        uniform_cdf,
+        samples_norm_cdf[nondegenerate],
+        uniform_cdf[nondegenerate],
         atol=6e-2,
     )

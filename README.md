@@ -43,7 +43,7 @@ If you use this code in your research, please cite:
 
 - Python >= 3.10
 - NumPy >= 1.21.2
-- JAX <= 0.4.48
+- JAX >= 0.4.20
 - [linox](https://github.com/2bys/linox) (from GitHub)
 
 Optional dependencies for development and testing are available in the `dev` extra.

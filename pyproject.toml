@@ -28,7 +28,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.21.2",
-    "jax<=0.4.48",
+    "jax>=0.4.20",
     "linox @ git+https://github.com/2bys/linox.git",
 ]
 dynamic = [
@@ -69,9 +69,11 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 platforms = ["any"]
 zip-safe = false
-packages = ["luno"]
 package-dir = { "" = "src" }
 include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.dynamic]
 version = { attr = "luno.__version__" }
